@@ -9,11 +9,27 @@ public class Cafe {
 	Cupboard cupboard; // (glasses, cups, milk and coffee)
 	Clock clock;
 	Landlord landlord;
-	Barmaid barmaid; // inherit operator
-	Assistant assistant; // inherit operator
+	Barmaid barmaid; //	TODO create parent class server
+	Assistant assistant;
 	ArrayList<Customer> customers;
 	
-
+	boolean isOpen = true;;
 	
-
+	public Cafe() {
+		tables = new ArrayList<Table>();
+		juiceFountain = new JuiceFountain();
+		clock = new Clock(this);
+		cupboard = new Cupboard();
+		landlord = new Landlord(this);
+		barmaid = new Barmaid(this);
+		assistant = new Assistant(this);
+		customers = new ArrayList<Customer>();
+	}
+	
+	public boolean order(Customer customer) {
+		if (isOpen) {
+			return customers.add(customer);
+		}
+		return false;
+	}
 }
