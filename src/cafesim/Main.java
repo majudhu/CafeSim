@@ -6,6 +6,7 @@ public class Main {
 		Cafe cafe = new Cafe();
 		CustomerGenerator cg = new CustomerGenerator(cafe);
 		cg.run();
+		cafe.landlord.run();
 
 	}
 

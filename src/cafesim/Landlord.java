@@ -7,8 +7,8 @@ public class Landlord extends Server {
 	}
 	
 	public void lastOrders() {
-		for (Customer customer  cafe.customers) {
-			
+		for (Customer customer: cafe.customers) {
+			customer.lastOrders();
 		}
 	}
 

@@ -24,11 +24,17 @@ public class Cafe {
 		barmaid = new Barmaid(this);
 		assistant = new Assistant(this);
 		customers = new ArrayList<Customer>();
+		
 	}
 	
 	public boolean order(Customer customer) {
 		if (isOpen) {
-			return customers.add(customer);
+			synchronized (customers) {
+				customers.add(customer);
+				clock.log("cafe", "l:" + customers.size());
+				customers.notifyAll();
+				return true;
+			}
 		}
 		return false;
 	}

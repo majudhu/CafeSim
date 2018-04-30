@@ -9,32 +9,34 @@ public abstract class Server implements Runnable {
 	
 	private void log(String info) {
 		cafe.clock.log(name, info);
-	};
+	}
 	
 	public Server(Cafe cafe, String name) {
 		this.cafe = cafe;
 		this.name = name;
 	}
 	
-	synchronized private void serve() throws InterruptedException {
+	 private void serve() throws InterruptedException {
 		Customer customer = null;
-		log("is recieveing a new order");
-		if (cafe.customers.isEmpty()) {
-			wait();
-		}
 		synchronized(cafe.customers) {
-			customer = cafe.customers.get(0);
-			cafe.customers.remove(0);
+			while (customer == null) {
+				if (!cafe.customers.isEmpty()) {
+					log("is recieveing a new order");
+					customer = cafe.customers.remove(0);
+				} else {
+					log("is waiting for a new order");
+					cafe.customers.wait();
+				}
+			}
 		}
 		log("has recieved a new order from Customer-" + customer.id);
-		log("is preparing " + customer.drink.type + " for customer-" + customer.id);
-		if (customer.drink.type == "Fruit Juice") {
+		log("is preparing " + customer.drinkType + " for customer-" + customer.id);
+		if (customer.drinkType == "Fruit Juice") {
 			log("is obtaining a glass from the cupboard");
 			cafe.cupboard.obtainGlass();
-			synchronized(cafe.juiceFountain ) {
-				cafe.juiceFountain.dispense();
-			}
-		} else if (customer.drink.type == "Cuppochino") {
+			log("is filling the glass from the juicefountain");
+			cafe.juiceFountain.dispense();
+		} else if (customer.drinkType == "Cuppochino") {
 			log("is obtaining cup from the cupboard");
 			cafe.cupboard.obtainCup();
 			log("is obtaining milk from the cupboard");
@@ -48,10 +50,13 @@ public abstract class Server implements Runnable {
 			log("is returning the coffee to the cupboard");
 			cafe.cupboard.obtainCoffee();
 		}
-		log("is serving " + customer.drink.type + " to Customer" + customer.id);	
+		log("is serving " + customer.drinkType + " to Customer" + customer.id);	
+		
+		customer.notify();
 	}
 	
 	public void run() {
+		log("is serving");
 		while (!timeToLeave) {
 			try {
 				serve();
@@ -59,6 +64,7 @@ public abstract class Server implements Runnable {
 				e.printStackTrace();
 			}
 		}
+		log("is leaving");
 	}
 	
 	protected void leave() {

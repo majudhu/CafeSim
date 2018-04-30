@@ -3,7 +3,7 @@ package cafesim;
 import java.util.Random;
 
 public class CustomerGenerator implements Runnable {
-	static final int NUMBER_OF_CUSTOMERS = 1;
+	static final int NUMBER_OF_CUSTOMERS = 5;
 	static final int RATIO_OF_CAPPUCCINO_DRINKERS = 2;
 	static final int RATIO_OF_CHOCOLATE_DRINKERS = 3;
 	static final int RATIO_OF_FRUIT_JUICE_DRINKERS = 4;
@@ -39,7 +39,7 @@ public class CustomerGenerator implements Runnable {
 			customer.run();
 			
 			try {
-				Thread.sleep(1000);
+				Thread.sleep(100);
 				
 			} catch (InterruptedException e1) {
 				e1.printStackTrace();
